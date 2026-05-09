@@ -1,109 +1,174 @@
--- Base de données pour le projet PHP
+-- --------------------------------------------------------
+-- Hôte:                         localhost
+-- Version du serveur:           8.0.40 - MySQL Community Server - GPL
+-- SE du serveur:                Win64
+-- HeidiSQL Version:             12.8.0.6908
+-- --------------------------------------------------------
 
--- Table Compte
-CREATE TABLE Compte (
-    idCompte BIGINT PRIMARY KEY AUTO_INCREMENT,
-    pseudo VARCHAR(32) NOT NULL,
-    eMail VARCHAR(255),
-    age TINYINT,
-    mdp VARCHAR(64) NOT NULL,
-    idTeam BIGINT,
-    typeCompte VARCHAR(20)
-);
-
--- Table Team
-CREATE TABLE Team (
-    idTeam BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nomTeam VARCHAR(64) NOT NULL,
-    chef BIGINT,
-    FOREIGN KEY (chef) REFERENCES Compte(idCompte)
-);
-
--- Ajout de la clé étrangère de joeur vers team
-ALTER TABLE Compte
-	ADD CONSTRAINT fk_compte_team
-	FOREIGN KEY (idTeam) REFERENCES Team(idTeam);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Table Jeu
-CREATE TABLE Jeu (
-    idJeu BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(255) NOT NULL,
-    typeJeu VARCHAR(255),
-    age TINYINT,
-    descJeu VARCHAR(1024)
-);
+-- Listage de la structure de la base pour projetphp
+CREATE DATABASE IF NOT EXISTS `projetphp` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `projetphp`;
 
--- --Table EloJoueur
--- CREATE TABLE EloJoueur (
---     idCompte BIGINT,
---     idJeu BIGINT,
---     elo INT,
---     PRIMARY KEY (idCompte, idJeu),
---     FOREIGN KEY (idCompte) REFERENCES Compte(idCompte),
---     FOREIGN KEY (idJeu) REFERENCES Jeu(idJeu)
--- );
+-- Listage de la structure de table projetphp. compte
+CREATE TABLE IF NOT EXISTS `compte` (
+  `idCompte` bigint NOT NULL AUTO_INCREMENT,
+  `pseudo` varchar(32) NOT NULL,
+  `eMail` varchar(255) DEFAULT NULL,
+  `age` tinyint DEFAULT NULL,
+  `mdp` varchar(64) NOT NULL,
+  `idTeam` bigint DEFAULT NULL,
+  `typeCompte` varchar(20) DEFAULT NULL,
+  `descCompte` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`idCompte`),
+  KEY `fk_compte_team` (`idTeam`),
+  CONSTRAINT `fk_compte_team` FOREIGN KEY (`idTeam`) REFERENCES `team` (`idTeam`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Table Tournoi
-CREATE TABLE Tournoi(
-    idTournoi BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(255) NOT NULL,
-    dateDebut DATE,
-    dateFin DATE,
-    idJeu BIGINT,
-    descTournoi VARCHAR(1024),
-    nbTeam TINYINT,
-    eloMin INT,
-    FOREIGN KEY (idJeu) REFERENCES Jeu(idJeu)
-);
+-- Listage des données de la table projetphp.compte : ~2 rows (environ)
+INSERT IGNORE INTO `compte` (`idCompte`, `pseudo`, `eMail`, `age`, `mdp`, `idTeam`, `typeCompte`, `descCompte`) VALUES
+	(1, 'Ilann.17', 'ilann.souchet1@orange.fr', 19, '$2y$10$e8S5CtLlSo0ukHM3FG1adeaXigSO98Oh1q.RLKS5ECumHqtVfSm6u', NULL, NULL, NULL),
+	(2, 'Test', 'oui', 20, '$2y$10$3sCJ042RTJ0ovJ9rX8POxO/CwonAlnLK/mSnqXg52AlSaZPYx7mJu', NULL, 'Joueur', NULL);
 
--- Table associative Team\Tournoi
-CREATE TABLE Joue (
-    idTournoi BIGINT,
-    idTeam BIGINT,
-    PRIMARY KEY (idTournoi, idTeam),
-    FOREIGN KEY (idTournoi) REFERENCES Tournoi(idTournoi),
-    FOREIGN KEY (idTeam) REFERENCES Team(idTeam)
-);
+-- Listage de la structure de table projetphp. jeu
+CREATE TABLE IF NOT EXISTS `jeu` (
+  `idJeu` bigint NOT NULL AUTO_INCREMENT,
+  `nomJeu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `typeJeu` varchar(255) DEFAULT NULL,
+  `descJeu` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`idJeu`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Table Sponsor 
-CREATE TABLE Sponsor (
-    idSponsor BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(64),
-    eMailSponsor VARCHAR(255),
-    mdpSponsor VARCHAR(64)
-);
+-- Listage des données de la table projetphp.jeu : ~10 rows (environ)
+INSERT IGNORE INTO `jeu` (`idJeu`, `nomJeu`, `typeJeu`, `descJeu`) VALUES
+	(1, 'Counter-Strike 2', 'FPS', 'Jeu de tir mythique très compétitif sur PC'),
+	(2, 'Hearts of Iron IV', 'Stratégie', 'Un jeu de stratégie de chez Paradox Interactive sur la Seconde Guerre Mondiale'),
+	(3, 'League of Legends', 'MOBA', 'Rage et larmes au rendez-vous sur ce MOBA légendaire, notamment pour sa communauté'),
+	(4, 'Rocket League', 'Course', 'Célèbre jeu de voitures volantes qui combine football et automobile'),
+	(5, 'Tom Clancy\'s Rainbow Six Siege', 'FPS', 'Un FPS tactique multijoueur où les joueurs s\'affrontent dans un univers destructibles'),
+	(6, 'Civilization VI', 'Stratégie', 'Un jeu de stratégie 4X où l\'on incarne une civilisation historique à travers plusieurs âges'),
+	(7, 'DOTA', 'MOBA', 'LOL mais plus grand'),
+	(8, 'Mario Kart World', 'Course', 'Aussi connu comme le briseurs d\'amitiés, Mario Kart est connu de partout'),
+	(9, 'Age of Empires II', 'Stratégie', 'Le jeu RTS de référence, encore excellent aujourd\'hui, Wololo !'),
+	(10, 'Super Smash Bros Ultimate', 'Combat', 'L\'autre briseur d\'amitiés, mais avec des poings et armes au lieu de carapaces');
 
--- Association porteuse de Sponsor vers Team
-CREATE TABLE Sponsorise (
-    idSponsor BIGINT,
-    idTeam BIGINT,
-    PRIMARY KEY (idSponsor, idTeam),
-    FOREIGN KEY (idSponsor) REFERENCES Sponsor(idSponsor),
-    FOREIGN KEY (idTeam) REFERENCES Team(idTeam)
-);
+-- Listage de la structure de table projetphp. matchs
+CREATE TABLE IF NOT EXISTS `matchs` (
+  `idMatch` bigint NOT NULL AUTO_INCREMENT,
+  `idTournoi` bigint DEFAULT NULL,
+  `idPhase` bigint DEFAULT NULL,
+  `dateMatch` date DEFAULT NULL,
+  PRIMARY KEY (`idMatch`),
+  KEY `idTournoi` (`idTournoi`),
+  KEY `idPhase` (`idPhase`),
+  CONSTRAINT `matchs_ibfk_1` FOREIGN KEY (`idTournoi`) REFERENCES `tournoi` (`idTournoi`),
+  CONSTRAINT `matchs_ibfk_2` FOREIGN KEY (`idPhase`) REFERENCES `phase` (`idPhase`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Association porteuse de Sponsor vers Tournoi
-CREATE TABLE Parraine (
-    idSponsor BIGINT,
-    idTournoi BIGINT,
-    PRIMARY KEY (idSponsor, idTournoi),
-    FOREIGN KEY (idSponsor) REFERENCES Sponsor(idSponsor),
-    FOREIGN KEY (idTournoi) REFERENCES Tournoi(idTournoi)
-);
+-- Listage des données de la table projetphp.matchs : ~0 rows (environ)
 
--- Table Match
-CREATE TABLE Match (
-    idMatch BIGINT PRIMARY KEY AUTO_INCREMENT,
-    idTournoi BIGINT,
-    idPhase BIGINT,
-    dateMatch DATE,
-    FOREIGN KEY (idTournoi) REFERENCES Tournoi(idTournoi),
-    FOREIGN KEY (idPhase) REFERENCES Phase(idPhase)
-);
+-- Listage de la structure de table projetphp. parraine
+CREATE TABLE IF NOT EXISTS `parraine` (
+  `idSponsor` bigint NOT NULL,
+  `idTournoi` bigint NOT NULL,
+  PRIMARY KEY (`idSponsor`,`idTournoi`),
+  KEY `idTournoi` (`idTournoi`),
+  CONSTRAINT `parraine_ibfk_1` FOREIGN KEY (`idSponsor`) REFERENCES `sponsor` (`idSponsor`),
+  CONSTRAINT `parraine_ibfk_2` FOREIGN KEY (`idTournoi`) REFERENCES `tournoi` (`idTournoi`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Table Phase
-CREATE TABLE Phase (
-    idPhase BIGINT PRIMARY KEY AUTO_INCREMENT,
-    nomPhase VARCHAR(255)
-);
+-- Listage des données de la table projetphp.parraine : ~0 rows (environ)
+
+-- Listage de la structure de table projetphp. participe
+CREATE TABLE IF NOT EXISTS `participe` (
+  `idTournoi` bigint NOT NULL,
+  `idTeam` bigint NOT NULL,
+  PRIMARY KEY (`idTournoi`,`idTeam`),
+  KEY `idTeam` (`idTeam`),
+  CONSTRAINT `participe_ibfk_1` FOREIGN KEY (`idTournoi`) REFERENCES `tournoi` (`idTournoi`),
+  CONSTRAINT `participe_ibfk_2` FOREIGN KEY (`idTeam`) REFERENCES `team` (`idTeam`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table projetphp.participe : ~0 rows (environ)
+
+-- Listage de la structure de table projetphp. phase
+CREATE TABLE IF NOT EXISTS `phase` (
+  `idPhase` bigint NOT NULL AUTO_INCREMENT,
+  `nomPhase` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`idPhase`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table projetphp.phase : ~0 rows (environ)
+
+-- Listage de la structure de table projetphp. sponsor
+CREATE TABLE IF NOT EXISTS `sponsor` (
+  `idSponsor` bigint NOT NULL AUTO_INCREMENT,
+  `nom` varchar(64) DEFAULT NULL,
+  `eMailSponsor` varchar(255) DEFAULT NULL,
+  `mdpSponsor` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`idSponsor`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table projetphp.sponsor : ~0 rows (environ)
+
+-- Listage de la structure de table projetphp. sponsorise
+CREATE TABLE IF NOT EXISTS `sponsorise` (
+  `idSponsor` bigint NOT NULL,
+  `idTeam` bigint NOT NULL,
+  PRIMARY KEY (`idSponsor`,`idTeam`),
+  KEY `idTeam` (`idTeam`),
+  CONSTRAINT `sponsorise_ibfk_1` FOREIGN KEY (`idSponsor`) REFERENCES `sponsor` (`idSponsor`),
+  CONSTRAINT `sponsorise_ibfk_2` FOREIGN KEY (`idTeam`) REFERENCES `team` (`idTeam`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table projetphp.sponsorise : ~0 rows (environ)
+
+-- Listage de la structure de table projetphp. team
+CREATE TABLE IF NOT EXISTS `team` (
+  `idTeam` bigint NOT NULL AUTO_INCREMENT,
+  `nomTeam` varchar(64) NOT NULL,
+  `chef` bigint DEFAULT NULL,
+  `tag` varchar(4) DEFAULT NULL,
+  PRIMARY KEY (`idTeam`),
+  KEY `chef` (`chef`),
+  CONSTRAINT `team_ibfk_1` FOREIGN KEY (`chef`) REFERENCES `compte` (`idCompte`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table projetphp.team : ~1 rows (environ)
+INSERT IGNORE INTO `team` (`idTeam`, `nomTeam`, `chef`, `tag`) VALUES
+	(8, 'WoW', 1, 'WoW');
+
+-- Listage de la structure de table projetphp. tournoi
+CREATE TABLE IF NOT EXISTS `tournoi` (
+  `idTournoi` bigint NOT NULL AUTO_INCREMENT,
+  `nomTournoi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `dateDebut` date DEFAULT NULL,
+  `dateFin` date DEFAULT NULL,
+  `idJeu` bigint DEFAULT NULL,
+  `descTournoi` varchar(1024) DEFAULT NULL,
+  `nbTeam` tinyint DEFAULT NULL,
+  `eloMin` int DEFAULT NULL,
+  `createur` bigint DEFAULT NULL,
+  PRIMARY KEY (`idTournoi`),
+  KEY `idJeu` (`idJeu`),
+  CONSTRAINT `tournoi_ibfk_1` FOREIGN KEY (`idJeu`) REFERENCES `jeu` (`idJeu`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Listage des données de la table projetphp.tournoi : ~0 rows (environ)
+INSERT IGNORE INTO `tournoi` (`idTournoi`, `nomTournoi`, `dateDebut`, `dateFin`, `idJeu`, `descTournoi`, `nbTeam`, `eloMin`, `createur`) VALUES
+	(1, 'Ouais Cheu', '2026-05-05', '2026-05-16', 6, 'Test de création de tournoi', 16, NULL, 2);
+
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
