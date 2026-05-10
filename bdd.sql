@@ -24,20 +24,22 @@ CREATE TABLE IF NOT EXISTS `compte` (
   `idCompte` bigint NOT NULL AUTO_INCREMENT,
   `pseudo` varchar(32) NOT NULL,
   `eMail` varchar(255) DEFAULT NULL,
-  `age` tinyint DEFAULT NULL,
+  `dateCreation` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `mdp` varchar(64) NOT NULL,
   `idTeam` bigint DEFAULT NULL,
   `typeCompte` varchar(20) DEFAULT NULL,
   `descCompte` varchar(1024) DEFAULT NULL,
+  `statut` varchar(20) DEFAULT 'Actif',
   PRIMARY KEY (`idCompte`),
   KEY `fk_compte_team` (`idTeam`),
   CONSTRAINT `fk_compte_team` FOREIGN KEY (`idTeam`) REFERENCES `team` (`idTeam`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Listage des données de la table projetphp.compte : ~2 rows (environ)
-INSERT IGNORE INTO `compte` (`idCompte`, `pseudo`, `eMail`, `age`, `mdp`, `idTeam`, `typeCompte`, `descCompte`) VALUES
-	(1, 'Ilann.17', 'ilann.souchet1@orange.fr', 19, '$2y$10$e8S5CtLlSo0ukHM3FG1adeaXigSO98Oh1q.RLKS5ECumHqtVfSm6u', NULL, NULL, NULL),
-	(2, 'Test', 'oui', 20, '$2y$10$3sCJ042RTJ0ovJ9rX8POxO/CwonAlnLK/mSnqXg52AlSaZPYx7mJu', NULL, 'Joueur', NULL);
+-- Listage des données de la table projetphp.compte : ~3 rows (environ)
+INSERT IGNORE INTO `compte` (`idCompte`, `pseudo`, `eMail`, `dateCreation`, `mdp`, `idTeam`, `typeCompte`, `descCompte`, `statut`) VALUES
+	(1, 'Ilann.17', 'ilann.souchet1@orange.fr', '2026-05-09 00:00:00', '$2y$10$e8S5CtLlSo0ukHM3FG1adeaXigSO98Oh1q.RLKS5ECumHqtVfSm6u', NULL, NULL, NULL, 'Actif'),
+	(2, 'Test', 'oui', '2026-05-09 00:00:00', '$2y$10$3sCJ042RTJ0ovJ9rX8POxO/CwonAlnLK/mSnqXg52AlSaZPYx7mJu', NULL, 'Joueur', NULL, 'Actif'),
+	(3, 'admin', 'admin@site.test', '2026-05-10 00:00:00', '$2y$10$yfQJ/VlHlBCB/nP9.TJ/jeLBb47bllPhPzaF8.bHvdLKBw0QdC2Ty', NULL, 'Admin', NULL, 'Actif');
 
 -- Listage de la structure de table projetphp. jeu
 CREATE TABLE IF NOT EXISTS `jeu` (
@@ -138,6 +140,7 @@ CREATE TABLE IF NOT EXISTS `team` (
   `nomTeam` varchar(64) NOT NULL,
   `chef` bigint DEFAULT NULL,
   `tag` varchar(4) DEFAULT NULL,
+  `statut` varchar(20) DEFAULT 'Actif',
   PRIMARY KEY (`idTeam`),
   KEY `chef` (`chef`),
   CONSTRAINT `team_ibfk_1` FOREIGN KEY (`chef`) REFERENCES `compte` (`idCompte`)
@@ -158,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `tournoi` (
   `nbTeam` tinyint DEFAULT NULL,
   `eloMin` int DEFAULT NULL,
   `createur` bigint DEFAULT NULL,
+  `statut` varchar(20) DEFAULT 'Actif',
   PRIMARY KEY (`idTournoi`),
   KEY `idJeu` (`idJeu`),
   CONSTRAINT `tournoi_ibfk_1` FOREIGN KEY (`idJeu`) REFERENCES `jeu` (`idJeu`)
