@@ -1,10 +1,10 @@
-﻿<?php
+<?php
 session_start();
 $pageTitle = 'Détails de la team';
 $rootPath = '..';
 
 try {
-    $bdd = new PDO('mysql:host=localhost;dbname=ProjetPHP', 'root', '');
+    $bdd = new PDO('mysql:host=localhost;dbname=ProjetPHP', 'root', 'root');
 } catch (Exception $e) {
     die('Erreur : ' . $e->getMessage());
 }
@@ -71,6 +71,10 @@ $team = $reqTeam->fetch();
 
 <?php if ($idTeamUser == $idTeam): ?>
     <p><a href="quitterTeam.php">Quitter cette team</a></p>
+<?php endif; ?>
+
+<?php if ($idTeamUser === null): ?>
+    <a href="rejoindreTeam.php?idTeam=<?= $idTeam ?>">Rejoindre cette team</a>
 <?php endif; ?>
 
 <h3>Tournois auxquels la team a participé</h3>
