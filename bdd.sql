@@ -49,19 +49,6 @@ INSERT IGNORE INTO `compte` (`idCompte`, `pseudo`, `eMail`, `dateCreation`, `mdp
 	(11, 'ChefTeam7', 'test@orange.fr', '2026-05-19', '$2y$10$Octak31l2xPoSws9RHePe.mIjGX5UlTa6Mh2L4kXVuxPrdJQ/V5Qu', 15, NULL, ''),
 	(12, 'ChefTeam8', 'test@orange.fr', '2026-05-19', '$2y$10$VUdZvTdceqG7UqfBQju.keC0731zmCAlyVQLQMxMLHXs4Jr7tpew2', 16, NULL, '');
 
--- Listage de la structure de table projetphp. equipe_match
-CREATE TABLE IF NOT EXISTS `equipe_match` (
-  `idMatch` bigint NOT NULL,
-  `idTeam` bigint NOT NULL,
-  `score` int DEFAULT NULL,
-  `estGagnant` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`idMatch`,`idTeam`),
-  KEY `idTeam` (`idTeam`),
-  CONSTRAINT `equipe_match_ibfk_1` FOREIGN KEY (`idMatch`) REFERENCES `matchs` (`idMatch`),
-  CONSTRAINT `equipe_match_ibfk_2` FOREIGN KEY (`idTeam`) REFERENCES `team` (`idTeam`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Listage des données de la table projetphp.equipe_match : ~0 rows (environ)
 
 -- Listage de la structure de table projetphp. jeu
 CREATE TABLE IF NOT EXISTS `jeu` (
